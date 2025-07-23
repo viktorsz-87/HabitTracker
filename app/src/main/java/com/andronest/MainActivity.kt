@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.andronest.screens.HabitTrackerApp
+import com.andronest.screens.HabitScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,7 +15,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            HabitTrackerApp()
+            HabitScreen()
+
         }
     }
 }

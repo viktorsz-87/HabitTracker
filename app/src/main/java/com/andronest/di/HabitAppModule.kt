@@ -13,22 +13,24 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class HabitTrackerModule {
+object HabitAppModule{
 
     @Singleton
     @Provides
-    fun provideDatabaseInstance(@ApplicationContext context: Context): HabitDatabase {
+    fun provideHabitDatabase(@ApplicationContext context: Context): HabitDatabase {
         return HabitDatabase.getDatabase(context)
     }
 
     @Singleton
     @Provides
-    fun provideHabitDao(habitDatabase: HabitDatabase): HabitDao{
+    fun provideHabitDao(habitDatabase: HabitDatabase): HabitDao {
+
         return habitDatabase.habitDao()
     }
 
     @Singleton
     @Provides
-    fun provideRepository(dao: HabitDao): HabitRepository = HabitRepository(dao)
-
+    fun provideHabitRepository(habitDao: HabitDao): HabitRepository {
+        return HabitRepository(habitDao)
+    }
 }

@@ -5,25 +5,31 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.andronest.model.entity.Habit
-import com.andronest.model.entity.HabitCompletion
-import kotlinx.coroutines.flow.Flow
+import androidx.room.Transaction
+import com.andronest.model.HabitWithCompletions
+import com.andronest.room.entity.Completion
+import com.andronest.room.entity.Habit
+
 
 @Dao
-interface HabitDao {
+interface HabitDao{
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = Habit::class)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit: Habit)
 
-    @Delete(entity = Habit::class)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCompletion(completion: Completion)
+
+    @Delete
     suspend fun deleteHabit(habit: Habit)
 
+    @Transaction
     @Query("SELECT * FROM habits")
-    fun getAllHabits(): Flow<List<Habit>>
+    suspend fun getHabitsWithCompletions(): List<HabitWithCompletions>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = HabitCompletion::class)
-    suspend fun insertCompletion(completion: HabitCompletion)
+    @Transaction
+    @Query("SELECT * FROM habits WHERE id = :habitId")
+    suspend fun getHabitWithCompletions(habitId: Int): HabitWithCompletions?
 
-    @Query("SELECT date from completions WHERE habitId = :habitId")
-    fun getCompletionDate(habitId: Int): Flow<List<Long>>
 }
+

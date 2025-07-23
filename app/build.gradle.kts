@@ -75,4 +75,15 @@ dependencies {
 
     // Worker
     implementation (libs.androidx.work.runtime.ktx)
+
+    // MPAndroidChart (for charts)
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // Compose integration (to embed charts in Jetpack Compose)
+    implementation("androidx.compose.ui:ui:1.6.0")
+    implementation("androidx.compose.ui:ui-tooling:1.6.0")
+    implementation("androidx.compose.foundation:foundation:1.6.0")
+
+    // Optional: For date formatting (if showing time-based data)
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
 }
