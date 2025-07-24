@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HabitViewModel @Inject constructor(
     private val repository: HabitRepository
-) : ViewModel(){
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HabitUIState>(HabitUIState())
     val uiState = _uiState.asStateFlow()
@@ -27,28 +27,33 @@ class HabitViewModel @Inject constructor(
         getHabitsWithCompletions()
     }
 
-    fun addHabit(name: String){
-        viewModelScope.launch {
+    fun addHabit(name: String, color: Color, icon: String?="") {
 
-            val newHabit = Habit(color = Color.Blue.copy(alpha = 0.2f).toArgb(), name = name, icon = "->")
-            repository.addHabit(habit = newHabit)
+        viewModelScope.launch {
+            repository.addHabit(
+                Habit(
+                    color = color.toArgb(),
+                    name = name,
+                    icon = icon
+                )
+            )
         }
     }
 
-    fun addCompletion(habitId: Int){
+    fun addCompletion(habitId: Int) {
         viewModelScope.launch {
             repository.completeHabit(habitId)
             //getHabitsWithCompletions()
 
             // Should be more efficient, needs to be tested
-            _uiState.update {state->
+            _uiState.update { state ->
                 state.copy(habits = state.habits.filter { it.habit.id != habitId })
             }
         }
     }
 
-    fun getHabitWithCompletions(habitId: Int){
-        viewModelScope.launch{
+    fun getHabitWithCompletions(habitId: Int) {
+        viewModelScope.launch {
 
             _uiState.update { it.copy(isLoading = true, error = null, habits = emptyList()) }
 
@@ -58,24 +63,25 @@ class HabitViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = if(result==null) "No data.." else null,
-                        habits = if(result==null) emptyList() else listOf(result)
+                        error = if (result == null) "No data.." else null,
+                        habits = if (result == null) emptyList() else listOf(result)
                     )
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         error = e.message,
-                        habits = emptyList())
+                        habits = emptyList()
+                    )
                 }
-                Log.e("HabitError",e.message, e)
+                Log.e("HabitError", e.message, e)
             }
         }
     }
 
-    fun getHabitsWithCompletions(){
-        viewModelScope.launch{
+    fun getHabitsWithCompletions() {
+        viewModelScope.launch {
 
             _uiState.update { it.copy(isLoading = true, error = null, habits = emptyList()) }
 
@@ -85,17 +91,19 @@ class HabitViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = if(result.isNullOrEmpty()) "No data.." else null,
-                        habits = result)
+                        error = if (result.isNullOrEmpty()) "No data.." else null,
+                        habits = result
+                    )
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         error = e.message,
-                        habits = emptyList())
+                        habits = emptyList()
+                    )
                 }
-                Log.e("HabitError",e.message, e)
+                Log.e("HabitError", e.message, e)
             }
         }
     }

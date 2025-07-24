@@ -1,4 +1,4 @@
-package com.andronest.screens
+package com.andronest.screens.habit
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxSize

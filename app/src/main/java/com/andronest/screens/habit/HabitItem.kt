@@ -1,4 +1,4 @@
-package com.andronest.screens
+package com.andronest.screens.habit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,11 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -28,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.andronest.model.HabitWithCompletions
@@ -57,7 +61,7 @@ fun HabitItem(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(50.dp)
                     .background(
                         color = Color(item.habit.color).copy(alpha = 0.3f),
                         shape = CircleShape
@@ -73,7 +77,7 @@ fun HabitItem(
             Spacer(modifier = Modifier.width(16.dp))
 
             // Habit name and streak
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.wrapContentSize()) {
                 Text(
                     text = item.habit.name,
                     style = MaterialTheme.typography.titleMedium,
@@ -86,16 +90,30 @@ fun HabitItem(
                 )
             }
 
-            // Streak Counter
-            Badge(
-                containerColor = Color(item.habit.color).copy(alpha = 0.3f),
-                contentColor = Color(item.habit.color)
-            ) {
+            Spacer(modifier = Modifier.width(16.dp))
 
-                Text(
-                    text = "${calculateStreak(item.completion)} day streak",
-                    style = MaterialTheme.typography.bodySmall
-                )
+            Column(modifier = Modifier.wrapContentSize()) {
+                // Streak Counter
+                BadgedBox(
+                    badge = {
+                        Badge(
+                            modifier.padding(start = 15.dp),
+                            containerColor = Color(item.habit.color).copy(alpha = 0.3f),
+                            contentColor = Color(item.habit.color)
+                        ) {
+
+                            Text(
+                                text = "${calculateStreak(item.completion)} day streak",
+                            )
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Streak",
+                        tint = Color(item.habit.color)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -104,44 +122,46 @@ fun HabitItem(
             LinearProgressIndicator(
                 progress = { calculateCompletionRate(item.completion) },
                 modifier = Modifier
+                    .padding(top = 25.dp)
                     .fillMaxWidth()
                     .height(8.dp),
                 color = Color(item.habit.color),
                 trackColor = Color(item.habit.color).copy(alpha = 0.1f),
                 strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
             )
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.fillMaxWidth()
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            FilledTonalButton(
+                elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 1.dp),
+                shape = RectangleShape,
+                onClick = onComplete,
+                colors = ButtonDefaults.filledTonalButtonColors(
+                    containerColor = Color(item.habit.color).copy(alpha = 0.2f)
+                )
             ) {
-                FilledTonalButton(
-                    onClick = onComplete,
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = Color(item.habit.color).copy(alpha = 0.2f)
-                    )
-                ) {
-                    Icon(Icons.Default.Check, contentDescription = "Complete")
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Complete")
-                }
-
+                Icon(Icons.Default.Check, contentDescription = "Complete")
                 Spacer(modifier = Modifier.width(8.dp))
+                Text("Complete", style = MaterialTheme.typography.titleMedium)
+            }
 
-                IconButton(
-                    onClick = onDelete,
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Delete",
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
+            Spacer(modifier = Modifier.width(8.dp))
+
+            IconButton(
+                onClick = onDelete,
+                modifier = Modifier.size(48.dp)
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = MaterialTheme.colorScheme.error
+                )
             }
         }
+
     }
 }
 
