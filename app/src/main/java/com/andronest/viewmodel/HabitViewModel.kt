@@ -27,6 +27,17 @@ class HabitViewModel @Inject constructor(
         getHabitsWithCompletions()
     }
 
+    fun removeHabit(habit: Habit){
+        viewModelScope.launch {
+            repository.removeHabit(habit)
+            //getHabitsWithCompletions()
+
+            _uiState.update { state ->
+                state.copy(habits = state.habits.filter { it.habit.id != habit.id })
+            }
+        }
+    }
+
     fun addHabit(name: String, color: Color, icon: String?="") {
 
         viewModelScope.launch {
@@ -37,18 +48,14 @@ class HabitViewModel @Inject constructor(
                     icon = icon
                 )
             )
+            getHabitsWithCompletions()
         }
     }
 
     fun addCompletion(habitId: Int) {
         viewModelScope.launch {
             repository.completeHabit(habitId)
-            //getHabitsWithCompletions()
-
-            // Should be more efficient, needs to be tested
-            _uiState.update { state ->
-                state.copy(habits = state.habits.filter { it.habit.id != habitId })
-            }
+            getHabitsWithCompletions()
         }
     }
 

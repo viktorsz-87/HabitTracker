@@ -54,7 +54,7 @@ fun HabitScreen(
             when {
                 uiState.error != null -> ErrorState(uiState.error ?: "Unknown error")
                 uiState.isLoading -> LoadingState()
-                !uiState.habits.isNullOrEmpty() -> ResultPage(uiState.habits)
+                !uiState.habits.isNullOrEmpty() -> ResultPage(uiState.habits, viewModel)
                 else -> EmptyState()
             }
         }

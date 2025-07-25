@@ -103,6 +103,7 @@ fun HabitItem(
                         ) {
 
                             Text(
+                                color = Color.Black,
                                 text = "${calculateStreak(item.completion)} day streak",
                             )
                         }
@@ -176,5 +177,5 @@ fun calculateStreak(completions: List<Completion>): Int {
 
 fun calculateCompletionRate(completions: List<Completion>): Float {
     // Your completion rate logic
-    return minOf(completions.size / 7f, 0f) // Example: weekly completion
+    return minOf(completions.size / 7f, 1f) // Example: weekly completion
 }

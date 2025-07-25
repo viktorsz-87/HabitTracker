@@ -21,6 +21,10 @@ class HabitRepository @Inject constructor(
         habitDao.insertHabit(habit = habit)
     }
 
+    suspend fun removeHabit(habit: Habit){
+        habitDao.deleteHabit(habit)
+    }
+
     suspend fun completeHabit(habitId: Int){
 
         val completion = Completion(

@@ -12,10 +12,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.andronest.model.HabitWithCompletions
+import com.andronest.viewmodel.HabitViewModel
 
 @Composable
 fun HabitCard(
     item: HabitWithCompletions,
+    viewModel: HabitViewModel,
     modifier: Modifier = Modifier) {
 
     Card(
@@ -34,7 +36,8 @@ fun HabitCard(
 
         HabitItem(
             item = item,
-            onDelete = {},
-            onComplete = {})
+            onDelete = { viewModel.removeHabit(item.habit) },
+            onComplete = { viewModel.addCompletion(item.habit.id) }
+        )
     }
 }

@@ -86,4 +86,8 @@ dependencies {
 
     // Optional: For date formatting (if showing time-based data)
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
+
+
+    // Kotlin + coroutines
+    implementation(libs.androidx.work.runtime.ktx)
 }

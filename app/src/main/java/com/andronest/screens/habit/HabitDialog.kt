@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,14 +25,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.andronest.util.NotificationScheduler
 import com.andronest.viewmodel.HabitViewModel
 
 
@@ -48,6 +52,11 @@ fun HabitDialog(
     var showColorPicker by remember { mutableStateOf(false) }
     var showIconPicker by remember { mutableStateOf(false) }
 
+    var showTimePicker by remember { mutableStateOf(false) }
+    var selectedHour by remember { mutableIntStateOf(0) }
+    var selectedMinute by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
+
     if (showDialog) {
 
         AlertDialog(
@@ -63,6 +72,7 @@ fun HabitDialog(
                         )
                         habitName = ""
                         onDismissRequest()
+                        NotificationScheduler.scheduleDailyReminder(context, selectedHour, selectedMinute)
                     }
                 ) {
                     Text("Add")
@@ -136,10 +146,47 @@ fun HabitDialog(
                                 textAlign = TextAlign.Center)
                         }
                     }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    // Timer picker
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        Icon(Icons.Default.Notifications, contentDescription = "Alarm")
+
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth().padding(start = 15.dp, end=15.dp)
+                                .background(
+                                    shape = CircleShape,
+                                    color= MaterialTheme.colorScheme.surfaceVariant)
+                                .clickable{ showTimePicker = true }
+                        ){
+
+                            Text(text = "${selectedHour.toString().padStart(2,'0')}:${selectedMinute.toString().padStart(2,'0')}",
+                                style = MaterialTheme.typography.headlineSmall,
+                                modifier = Modifier
+                                    .wrapContentSize() // take only needed space
+                                    .padding(4.dp),
+                                textAlign = TextAlign.Center)
+                        }
+                    }
                 }
             }
         )
     }
+
+    HabitReminderTimePicker(
+        showDialog = showTimePicker,
+        onDismiss = { showTimePicker = false },
+        onTimeSelected = { hours, mins->
+            selectedHour = hours
+            selectedMinute = mins
+            //NotificationScheduler.scheduleDailyReminder(context, hours, mins)
+        }
+    )
 
     HabitColorPickerDialog(
         showDialog = showColorPicker,
