@@ -32,9 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.andronest.R
 import com.andronest.model.HabitWithCompletions
+import com.andronest.navigation.Navigation
 import com.andronest.room.entity.Completion
 import com.andronest.room.entity.Habit
 
@@ -43,6 +47,7 @@ fun HabitItem(
     onComplete: () -> Unit = {},
     onDelete: () -> Unit = {},
     item: HabitWithCompletions,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -136,6 +141,18 @@ fun HabitItem(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth()
         ) {
+
+            IconButton(
+                onClick = {  navController.navigate(Navigation.Analytics.createRoute(item.habit.id)) },
+                modifier = Modifier.size(48.dp)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.analytics_24),
+                    contentDescription = "Analytics",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+
             FilledTonalButton(
                 elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 1.dp),
                 shape = RectangleShape,

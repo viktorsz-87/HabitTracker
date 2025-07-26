@@ -27,6 +27,12 @@ class HabitViewModel @Inject constructor(
         getHabitsWithCompletions()
     }
 
+    fun getCompletions(habitId: Int){
+        viewModelScope.launch {
+
+        }
+    }
+
     fun removeHabit(habit: Habit){
         viewModelScope.launch {
             repository.removeHabit(habit)

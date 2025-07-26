@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andronest.model.HabitWithCompletions
 import com.andronest.viewmodel.HabitViewModel
 
@@ -18,6 +19,7 @@ import com.andronest.viewmodel.HabitViewModel
 fun HabitCard(
     item: HabitWithCompletions,
     viewModel: HabitViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier) {
 
     Card(
@@ -37,7 +39,8 @@ fun HabitCard(
         HabitItem(
             item = item,
             onDelete = { viewModel.removeHabit(item.habit) },
-            onComplete = { viewModel.addCompletion(item.habit.id) }
+            onComplete = { viewModel.addCompletion(item.habit.id) },
+            navController = navController
         )
     }
 }

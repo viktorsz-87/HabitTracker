@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.andronest.screens.EmptyState
 import com.andronest.screens.ErrorState
 import com.andronest.screens.LoadingState
@@ -25,6 +26,7 @@ import com.andronest.viewmodel.HabitViewModel
 @Composable
 fun HabitScreen(
     viewModel: HabitViewModel = hiltViewModel(),
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
 
@@ -51,10 +53,18 @@ fun HabitScreen(
                 .padding(padding)
         ) {
 
+            /*if(!uiState.habits.isNullOrEmpty()){
+                val firstHabitDates = uiState.habits.first().completion.map{
+                    it.date
+                }
+                WeeklyHabitChart(firstHabitDates)
+            }*/
+
+
             when {
                 uiState.error != null -> ErrorState(uiState.error ?: "Unknown error")
                 uiState.isLoading -> LoadingState()
-                !uiState.habits.isNullOrEmpty() -> ResultPage(uiState.habits, viewModel)
+                !uiState.habits.isNullOrEmpty() -> ResultPage(uiState.habits, viewModel, navController)
                 else -> EmptyState()
             }
         }

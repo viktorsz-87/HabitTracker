@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.andronest.model.HabitWithCompletions
 import com.andronest.screens.habit.HabitCard
 import com.andronest.viewmodel.HabitViewModel
@@ -13,13 +14,15 @@ import com.andronest.viewmodel.HabitViewModel
 fun ResultPage(
     habits: List<HabitWithCompletions>,
     viewModel: HabitViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier) {
+
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
 
         items(items = habits){item->
 
-            HabitCard(item, viewModel)
+            HabitCard(item, viewModel, navController)
         }
     }
 }
